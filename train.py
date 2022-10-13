@@ -166,7 +166,7 @@ def main(args):
         shuffle=False, num_workers=args.workers, pin_memory=True)
 
     print("Creating model")
-    model = torchvision.models.__dict__[args.model](pretrained=True)
+    model = torchvision.models.__dict__[args.model]()
     num_ftrs = model.fc.in_features
     model.fc = nn.Linear(num_ftrs, len(classes))
     #model.fc = FC(num_ftrs, len(classes))
@@ -213,10 +213,10 @@ if __name__ == "__main__":
     parser.add_argument('--model', default='resnet101', help='model')
     parser.add_argument('--device', default=[0], help='device')
     parser.add_argument('-b', '--batch-size', default=512, type=int)
-    parser.add_argument('--epochs', default=90, type=int, metavar='N',
+    parser.add_argument('--epochs', default=50, type=int, metavar='N',
                         help='number of total epochs to run')
-    parser.add_argument('-j', '--workers', default=16, type=int, metavar='N',
-                        help='number of data loading workers (default: 16)')
+    parser.add_argument('-j', '--workers', default=8, type=int, metavar='N',
+                        help='number of data loading workers (default: 8)')
     parser.add_argument('--lr', default=0.01, type=float, help='initial learning rate')
     parser.add_argument('--momentum', default=0.9, type=float, metavar='M',
                         help='momentum')
@@ -225,7 +225,7 @@ if __name__ == "__main__":
                         dest='weight_decay')
     parser.add_argument('--lr-gamma', default=0.1, type=float, help='decrease lr by a factor of lr-gamma')
     parser.add_argument('--print-freq', default=10, type=int, help='print frequency')
-    parser.add_argument('--eval-freq', default=50, type=int, help='validation frequency of batchs')
+    parser.add_argument('--eval-freq', default=30, type=int, help='validation frequency of batchs')
     parser.add_argument('--checkpoints', default='./checkpoint', help='path where to save')
     parser.add_argument('--resume', default='', help='resume from checkpoint')
     parser.add_argument(
