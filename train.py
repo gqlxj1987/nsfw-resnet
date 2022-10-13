@@ -21,10 +21,11 @@ def train_one_epoch(model, criterion, optimizer, data_loader, epoch, val_dataloa
     running_corrects = 0
     epoch_data_len = len(data_loader.dataset)
     print('Train data num: {}'.format(epoch_data_len))
+    device = torch.device('cpu')
 
     for i, (image, target) in enumerate(data_loader):
         batch_start = time.time()
-        image, target = image.cuda(), target.cuda()
+        image, target = image.to(device), target.to(device)
         output = model(image)
         loss = criterion(output, target)
 
@@ -82,11 +83,12 @@ def evaluate(model, criterion, data_loader, epoch, step):
     running_corrects = 0
     epoch_data_len = len(data_loader.dataset)
     print('Val data num: {}'.format(epoch_data_len))
+    device = torch.device('cpu')
 
     with torch.no_grad():
         for i, (image, target) in enumerate(data_loader):
             batch_start = time.time()
-            image, target = image.cuda(), target.cuda()
+            image, target = image.to(device), target.to(device)
             output = model(image)
             loss = criterion(output, target)
 
@@ -172,7 +174,9 @@ def main(args):
 
     # support muti gpu
     model = nn.DataParallel(model, device_ids=args.device)
-    model.cuda()
+    device = torch.device('cpu')
+    model.to(device)
+    # model.cuda()
 
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
@@ -205,7 +209,7 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description='PyTorch Classification Training')
 
-    parser.add_argument('--data-dir', default='/data/user/yangfg/corpus/kar-data', help='dataset')
+    parser.add_argument('--data-dir', default='./data', help='dataset')
     parser.add_argument('--model', default='resnet101', help='model')
     parser.add_argument('--device', default=[0], help='device')
     parser.add_argument('-b', '--batch-size', default=512, type=int)
@@ -222,7 +226,7 @@ if __name__ == "__main__":
     parser.add_argument('--lr-gamma', default=0.1, type=float, help='decrease lr by a factor of lr-gamma')
     parser.add_argument('--print-freq', default=10, type=int, help='print frequency')
     parser.add_argument('--eval-freq', default=50, type=int, help='validation frequency of batchs')
-    parser.add_argument('--checkpoints', default='./checkpoints', help='path where to save')
+    parser.add_argument('--checkpoints', default='./checkpoint', help='path where to save')
     parser.add_argument('--resume', default='', help='resume from checkpoint')
     parser.add_argument(
         "--test-only",
