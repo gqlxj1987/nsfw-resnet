@@ -35,7 +35,8 @@ def main(args):
     model.fc = nn.Linear(num_ftrs, len(classes))
 
     model = nn.DataParallel(model, device_ids=args.device)
-    model.cuda()
+    device = torch.device('cpu')
+    model.to(device)
     model.load_state_dict(torch.load(args.checkpoint)['model'])
     model.eval()
 
@@ -46,7 +47,8 @@ def main(args):
             #image_tensor = transformation(Image.open(image_)).float()
             image_tensor = transformation(Image.open(image_).convert('RGB')).float()
             image_tensor = image_tensor.unsqueeze_(0)
-            input = image_tensor.cuda()
+            input = image_tensor.to(device)
+            # input = image_tensor.cuda()
             output = model(input)
 
             index = output.data.cpu().numpy().argmax()
@@ -63,13 +65,13 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description='PyTorch Classification Training')
 
-    parser.add_argument('--test-path', default='./data/beauty', help='dataset')
+    parser.add_argument('--test-path', default='./data/401', help='dataset')
     parser.add_argument('--model', default='resnet101', help='model')
     parser.add_argument('--device', default=[0], help='device')
     parser.add_argument('-b', '--batch-size', default=32, type=int)
-    parser.add_argument('-j', '--workers', default=16, type=int, metavar='N',
+    parser.add_argument('-j', '--workers', default=8, type=int, metavar='N',
                         help='number of data loading workers (default: 16)')
-    parser.add_argument('--checkpoint', default='./checkpoints/model_2_600.pth', help='checkpoint')
+    parser.add_argument('--checkpoint', default='./checkpoint/model_0_100.pth', help='checkpoint')
 
     args = parser.parse_args()
 

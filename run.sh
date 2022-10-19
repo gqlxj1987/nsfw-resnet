@@ -2,7 +2,7 @@
 
 if [ "$1" = "train" ];
 then
-    python train.py --model resnet101 --batch-size 64 --eval-freq 2000 --checkpoints checkpoints
+    python train.py --model resnet101 --batch-size 64 --eval-freq 2000 --checkpoints checkpoint
 elif [ "$1" = "predict" ];
 then
     python 1_predict_image.py --model resnet101 --checkpoint checkpoints/model_21_6000.pth --test-path inputs/

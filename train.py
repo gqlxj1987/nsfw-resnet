@@ -224,8 +224,8 @@ if __name__ == "__main__":
                         metavar='W', help='weight decay (default: 1e-4)',
                         dest='weight_decay')
     parser.add_argument('--lr-gamma', default=0.1, type=float, help='decrease lr by a factor of lr-gamma')
-    parser.add_argument('--print-freq', default=10, type=int, help='print frequency')
-    parser.add_argument('--eval-freq', default=30, type=int, help='validation frequency of batchs')
+    parser.add_argument('--print-freq', default=50, type=int, help='print frequency')
+    parser.add_argument('--eval-freq', default=100, type=int, help='validation frequency of batchs')
     parser.add_argument('--checkpoints', default='./checkpoint', help='path where to save')
     parser.add_argument('--resume', default='', help='resume from checkpoint')
     parser.add_argument(
